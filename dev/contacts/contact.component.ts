@@ -1,33 +1,29 @@
 import {Component} from "angular2/core"
+import {Router, ROUTER_PROVIDERS} from "angular2/router";
+import {Contact} from "./contact";
+import {ContactService} from "./contact.service";
 @Component({
-    selector: "contact-list",
-    template: `
-        <ul>
-            <li *ngFor="#contact of contacts"
-            (click)="onSelect(contact)"
-            [class.clicked]="showDetail === true"
-            >{{contact.firstname}} {{contact.lastname}}
-            
-            </li>
-        </ul>
-                <input [(ngModel)]="selectedContact.firstname" type="text">
-        <div> Phone Number: {{selectedContact.phone}} <br/>
-                    Email: {{selectedContact.email}}
+    selector: "contact",
+    template: `     
+        <input [(ngModel)]="contact.firstname" type="text"/>
+        <div> LastName: {{contact.lastname}} <br/> </div>
+        <div> Phone Number: {{contact.phone}} <br/> </div>
+        <div>           Email: {{contact.email}}
         </div>
-    `
+        <button (click)="copyContact()">Create new contact from this contact</button>
+    `,
+    inputs: ["contact"],
+    providers: [ContactService]
 
 })
 
-export class ContactListComponent {
-    public contacts = [
-        {firstname: "Khalil", lastname:"Mouakher", phone:"0232324345", email:"mouakharkhalil@gmail.com"},
-        {firstname: "Hanen", lastname:"Mouakher", phone:"02323242323", email:"mouakharhanen@gmail.com"},
-        {firstname: "Rayyan", lastname:"Mouakher", phone:"0232324422", email:"mouakharRayyan@gmail.com"}
+export class ContactComponent {
 
-    ];
-    public selectedContact = {};
-
-    onSelect(contact){
-        this.selectedContact = contact;
+    public contact: Contact = null;
+    
+    constructor(private _router: Router){}
+    
+    copyContact() {
+        this._router.navigate(['NewContactFrom', {firstname: this.contact.firstname}]);
     }
 }
